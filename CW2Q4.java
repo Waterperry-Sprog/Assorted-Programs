@@ -8,37 +8,9 @@ public class CW2Q4 {
 	
 	 Vector<String> names = new Vector<String>();
 	 int progress = 0;
-	 Node[] mockMemory;
+	 MockMemory mem = new MockMemory(50000);
 	 Node head;
 	 Node tail;
-	
-	 /**
-	  * This method searches memory for an empty space to put a node.
-	  * @return the memory address of the empty space.
-	  */
-	public  int findNextSpace() {
-		for(int i = 0; i<mockMemory.length;i++) {
-			if(mockMemory[i]==null) {		//the list is laid out sequentially in memory, but the code doesn't rely on this
-				return i;							//being the case
-			}
-		}
-		System.out.println("List full.");
-		return -1;
-	}
-	
-	/**
-	 * This method searches memory to find a given node.
-	 * @param n The node to search for
-	 * @return the address in memory of the node.
-	 */
-	public int getMemAddrOf(Node n) {
-		for(int i = 0; i<mockMemory.length; i++) {
-			if(n.equals(mockMemory[i])) {
-				return i;
-			}
-		}
-		return -1;
-	}
 	
 	public  String getHeadName() {
 		return head.getData();
@@ -47,7 +19,6 @@ public class CW2Q4 {
 	public  String getTailName() {
 		return tail.getData();
 	}
-	
 	
 	/**
 	 * Make the temp node seek through the array until it finds the input name.
@@ -64,7 +35,7 @@ public class CW2Q4 {
 				}
 				//otherwise, move on until we reach the end of the list
 				Node changeover = temp;						//variable to facilitate changeover
-				temp = mockMemory[xor(temp_old.getXorLink(), temp.getXorLink())];
+				temp = mem.getElementAt(xor(temp_old.getXorLink(), temp.getXorLink()));
 				temp_old = changeover;
 			}
 		} catch(NullPointerException n) {
@@ -81,49 +52,40 @@ public class CW2Q4 {
 		Node prev = new Node("");
 		Node curr = new Node("");
 		
-		for(int i = 0; i<mockMemory.length; i++) {
-			mockMemory[i] = null;
+		for(int i = 0; i<mem.getLength(); i++) {
+			mem.setElementAt(i, null);
 		}
 		
-		int currAddr = findNextSpace();
-		mockMemory[currAddr] = new Node("");
-		int nextAddr = findNextSpace();
-		mockMemory[currAddr] = null;
+		int currAddr = mem.findNextSpace();
+		mem.setElementAt(currAddr, new Node(""));
+		int nextAddr = mem.findNextSpace();
+		mem.setElementAt(currAddr, null);
 		
 		curr.setData(names.get(progress++));
 		curr.setXorLink(xor(null, nextAddr));
-		mockMemory[currAddr] = new Node(curr.getData(),curr.getXorLink());		//put curr in memory at the next available space
-		head = mockMemory[currAddr];
-		tail = mockMemory[currAddr];
-		prev = mockMemory[currAddr];
-		currAddr = findNextSpace();
-		mockMemory[currAddr] = new Node("");
-		nextAddr = findNextSpace();
-		mockMemory[currAddr] = null;
+		mem.setElementAt(currAddr, new Node(curr.getData(),curr.getXorLink()));		//put curr in memory at the next available space
+		head = mem.getElementAt(currAddr);
+		tail = mem.getElementAt(currAddr);
+		prev = mem.getElementAt(currAddr);
+		currAddr = mem.findNextSpace();
+		mem.setElementAt(currAddr, new Node(""));
+		nextAddr = mem.findNextSpace();
+		mem.setElementAt(currAddr, null);
 		
 		while(progress<names.size()) {
 			curr.setData(names.get(progress++));
 			curr.setXorLink( xor(prev.getXorLink(), nextAddr) );	//so now curr is established fully.
-			mockMemory[currAddr] = new Node(curr.getData(),curr.getXorLink());		//put curr in memory at the next available space
-			prev = mockMemory[currAddr];
+			mem.setElementAt(currAddr, new Node(curr.getData(),curr.getXorLink()));		//put curr in memory at the next available space
+			prev = mem.getElementAt(currAddr);
 			tail = prev;
-			currAddr = findNextSpace();
-			mockMemory[currAddr] = new Node("");
-			nextAddr = findNextSpace();
-			mockMemory[currAddr] = null;
+			currAddr = mem.findNextSpace();
+			mem.setElementAt(currAddr, new Node(""));
+			nextAddr = mem.findNextSpace();
+			mem.setElementAt(currAddr, null);
 		}
 	}
 
-	/**
-	 * This method prints all assignments of nodes to memory addresses.
-	 */
-	public void showAllMemAssignments() {
-		for(int i = 0; i<mockMemory.length;i++) {
-			if(mockMemory[i].getData()!="") {
-				System.out.println(i+": "+mockMemory[i].getData());
-			}
-		}
-	}
+
 	
 	public Integer xor(Integer x, Integer y) {
 		if(x==null) return y;
@@ -137,7 +99,7 @@ public class CW2Q4 {
 		Node temp_old = new Node("");
 		while((xor(temp.getXorLink(),temp_old.getXorLink()))!=null) {
 			Node changeover = temp;						//variable to facilitate changeover
-			temp = mockMemory[xor(temp_old.getXorLink(), temp.getXorLink())];
+			temp = mem.getElementAt(xor(temp_old.getXorLink(), temp.getXorLink()));
 			temp_old = changeover;
 		}
 		} catch (NullPointerException e) {
@@ -147,8 +109,8 @@ public class CW2Q4 {
 
 	public Node getNextNode(Node n)  {
 		Node temp = n;
-		int addr = getMemAddrOf(n);
-		return (mockMemory[ xor(addr, temp.getXorLink()) ]);
+		int addr = mem.getMemAddrOf(n);
+		return (mem.getElementAt( xor(addr, temp.getXorLink()) ));
 	}
 	
 	public Node getPrevNode(Node n) {
@@ -179,25 +141,20 @@ public class CW2Q4 {
 		
 		temp = seek(after);
 		
-		
-		
-		
-		
-		int forNewEl = findNextSpace();
-		int nextNewXor = xor(forNewEl, ( xor(next.getXorLink(), getMemAddrOf(curr))) );
-		int currNewXor = xor(forNewEl, ( xor(getMemAddrOf(next), prev.getXorLink()) ));
-		int newNewXor = xor(getMemAddrOf(curr), getMemAddrOf(next));
+		int forNewEl = mem.findNextSpace();
+		int nextNewXor = xor(forNewEl, ( xor(next.getXorLink(), mem.getMemAddrOf(curr))) );
+		int currNewXor = xor(forNewEl, ( xor(mem.getMemAddrOf(next), prev.getXorLink()) ));
+		int newNewXor = xor(mem.getMemAddrOf(curr), mem.getMemAddrOf(next));
 		
 		curr.setXorLink(currNewXor);
 		next.setXorLink(nextNewXor);
-		mockMemory[forNewEl] = new Node(newObj, newNewXor);
+		mem.setElementAt( forNewEl, new Node(newObj, newNewXor));
 	}
 	
 	public void insertBefore ( String before , String newObj ) {
 		Node n = seek(before);
 		Node beforeNode = getPrevNode(n);
 		insertAfter(beforeNode.getData(), newObj);
-		
 	}
 	
 	/**
@@ -241,7 +198,7 @@ public class CW2Q4 {
 				}
 			}
 			
-			mockMemory = new Node[2*dummy.size()];
+			mem = new MockMemory(2 * dummy.size());
 			
 			names.add(name);			//add the last name not marked by a comma
 			names.add("");		//add this to make it easier to instantiate list
@@ -274,8 +231,9 @@ public class CW2Q4 {
 		list.importNames(args[0]);
 		list.instantiateNamesInMemory();
 		System.out.println("List instantiated.");
+//		list.mem.showAllMemAssignments();
 		
-		list.printList();
+//		list.printList();
 		//list.insertAfter("LINDA", "insertAfterIsWorking!");
 		//list.printList();
 		

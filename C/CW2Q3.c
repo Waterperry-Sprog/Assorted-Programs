@@ -24,7 +24,7 @@ char* appendToString(char* str, char c);
 
 int main(int argc, char** argv){
 	if(argc==1) {
-		printf("Usage: ./a.out <filename>\n");
+		printf("Usage: %s <filename>\n", argv[0]);
 		return 0;
 	}
 	array = malloc(sizeof(char*)*ARRAY_LEN);
@@ -46,7 +46,7 @@ int main(int argc, char** argv){
 	printf("%d names stored.\n\n",namesStored);
 
 	char c;
-	printf("WELCOME TO TB791'S MANAGEMENT CONSOLE FOR A HASHTABLE IMPLEMENTATION ^_^\n");
+	printf("WELCOME TO TB791'S MANAGEMENT CONSOLE FOR A HASHTABLE IMPLEMENTATION\n");
 	printf("\nEnter operation you would like to perform\n(A - add, R - remove, S - search, P - print all assignments, E - exit) >");
 	while((c = getchar())!= 'E'){
 		if(c=='\n') ;

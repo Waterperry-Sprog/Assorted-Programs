@@ -22,7 +22,7 @@ char* asterisk(char* word);
 
 int main(int argc, char** argv){
 	if(argc==1||argc==2){
-		printf("Usage: ./a.out <filename> <redactedfilename>\n");
+		printf("Usage: %s <filename> <redactedfilename>\n", argv[0]);
 		exit(0);
 	}
 

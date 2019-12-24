@@ -18,7 +18,7 @@ int strcomp(char* one, char* two, int charIndex);
 
 int main(int argc, char** argv) {
 	if(argc==1){
-		printf("Usage: ./a.out <filename>\n");
+		printf("Usage: %s <filename>\n", argv[0]);
 		return 0;
 	}
 
