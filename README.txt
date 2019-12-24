@@ -1,4 +1,4 @@
-tb791's CM10228 Coursework Submission
+<redacted>'s <redacted> Coursework Submission
 
 ==GENERAL==
 Each program, when run with the correct command line arguments, will produce some console output. The results of the algorithms (for q2, the sorted list of names, etc.) will be 

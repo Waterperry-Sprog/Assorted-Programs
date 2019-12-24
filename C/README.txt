@@ -1,4 +1,4 @@
-tb791's CM10228 Coursework Submission
+<redacted>'s <redacted> Coursework Submission
 
 ==GENERAL==
 Each program, when run with the correct command line arguments, will produce some console output. The results of the algorithms (for q2, the sorted list of names, etc.) will be 
@@ -9,7 +9,7 @@ Each program, when run with the correct command line arguments, will produce som
 	Q2: gcc q2.c && ./a.out names.txt
 	Q3: gcc q3.c && ./a.out names.txt
 	Q4: java CW2Q4 names.txt
-	Q5: gcc q5.c && ./a.out debate.txt redact.txt
+	Q5: gcc q5.c && ./a.out debate.txt redact.txt 
 	Q6: java CW2Q6 warandpeace.txt redact.txt
 	Q7: gcc q7.c && ./a.out input.txt LOVELACE
 	Q8: java CW2Q8 
